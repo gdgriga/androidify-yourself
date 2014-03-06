@@ -4,6 +4,7 @@
 
 # Packages
 *.jar
+!*gradle-wrapper.jar
 *.apk
 *.ap_
 
@@ -15,6 +16,7 @@ out/
 bin/
 gen/
 target/
+build/
 .gradle/
 gen-external-apklibs/
 
