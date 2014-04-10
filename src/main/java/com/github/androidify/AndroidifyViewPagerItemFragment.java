@@ -7,11 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-public class AndroidifyPartFragment extends Fragment {
+public class AndroidifyViewPagerItemFragment extends Fragment {
 
     private int imgId;
 
-    public AndroidifyPartFragment(int imgId) {
+    public AndroidifyViewPagerItemFragment(int imgId) {
         this.imgId = imgId;
     }
 

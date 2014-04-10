@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class PlaceholderFragment extends Fragment {
 
@@ -22,9 +21,9 @@ public class PlaceholderFragment extends Fragment {
         ViewPager viewPagerLegs = (ViewPager)rootView.findViewById(R.id.viewPagerLegs);
 
         FragmentManager fm = getActivity().getSupportFragmentManager();
-        viewPagerHead.setAdapter(new ViewPagerAdapter(fm, new ArrayList<Integer>()));
-        viewPagerBody.setAdapter(new ViewPagerAdapter(fm, new ArrayList<Integer>()));
-        viewPagerLegs.setAdapter(new ViewPagerAdapter(fm, new ArrayList<Integer>()));
+        viewPagerHead.setAdapter(new AndroidifyViewPagerAdapter(fm, new ArrayList<Integer>()));
+        viewPagerBody.setAdapter(new AndroidifyViewPagerAdapter(fm, new ArrayList<Integer>()));
+        viewPagerLegs.setAdapter(new AndroidifyViewPagerAdapter(fm, new ArrayList<Integer>()));
 
         return rootView;
     }
