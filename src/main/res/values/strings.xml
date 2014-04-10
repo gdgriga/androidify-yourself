@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">My Module</string>
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="create_your_android">Create your Android</string>
 
 </resources>
