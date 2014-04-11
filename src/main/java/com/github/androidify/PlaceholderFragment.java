@@ -8,8 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
-
 public class PlaceholderFragment extends Fragment {
 
     @Override
@@ -21,9 +19,9 @@ public class PlaceholderFragment extends Fragment {
         ViewPager viewPagerLegs = (ViewPager) rootView.findViewById(R.id.viewPagerLegs);
 
         FragmentManager fm = getActivity().getSupportFragmentManager();
-        viewPagerHead.setAdapter(new AndroidifyViewPagerAdapter(fm, new ArrayList<Integer>()));
-        viewPagerBody.setAdapter(new AndroidifyViewPagerAdapter(fm, new ArrayList<Integer>()));
-        viewPagerLegs.setAdapter(new AndroidifyViewPagerAdapter(fm, new ArrayList<Integer>()));
+        viewPagerHead.setAdapter(new AndroidifyViewPagerAdapter(fm, AndroidDrawables.getHeads()));
+        viewPagerBody.setAdapter(new AndroidifyViewPagerAdapter(fm, AndroidDrawables.getBodies()));
+        viewPagerLegs.setAdapter(new AndroidifyViewPagerAdapter(fm, AndroidDrawables.getLegs()));
 
         return rootView;
     }
