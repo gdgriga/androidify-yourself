@@ -18,26 +18,31 @@
             android:gravity="center"
             android:textSize="@dimen/heading4"/>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/black"/>
+
     <android.support.v4.view.ViewPager
             android:id="@+id/viewPagerHead"
             android:layout_weight="2"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="@drawable/border"/>
+            android:background="@drawable/border_left_right"/>
 
     <android.support.v4.view.ViewPager
             android:id="@+id/viewPagerBody"
             android:layout_weight="2"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="@drawable/border"/>
+            android:background="@drawable/border_left_right"/>
 
     <android.support.v4.view.ViewPager
             android:id="@+id/viewPagerLegs"
             android:layout_weight="2"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="@drawable/border"/>
+            android:background="@drawable/border_left_right"/>
 
     <LinearLayout
             android:layout_width="match_parent"
