@@ -16,9 +16,9 @@ public class PlaceholderFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-        ViewPager viewPagerHead = (ViewPager)rootView.findViewById(R.id.viewPagerHead);
-        ViewPager viewPagerBody = (ViewPager)rootView.findViewById(R.id.viewPagerBody);
-        ViewPager viewPagerLegs = (ViewPager)rootView.findViewById(R.id.viewPagerLegs);
+        ViewPager viewPagerHead = (ViewPager) rootView.findViewById(R.id.viewPagerHead);
+        ViewPager viewPagerBody = (ViewPager) rootView.findViewById(R.id.viewPagerBody);
+        ViewPager viewPagerLegs = (ViewPager) rootView.findViewById(R.id.viewPagerLegs);
 
         FragmentManager fm = getActivity().getSupportFragmentManager();
         viewPagerHead.setAdapter(new AndroidifyViewPagerAdapter(fm, new ArrayList<Integer>()));
