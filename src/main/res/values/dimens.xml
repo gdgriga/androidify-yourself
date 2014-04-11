@@ -3,5 +3,6 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="heading4">30sp</dimen>
+    <dimen name="heading5">20sp</dimen>
 
 </resources>
