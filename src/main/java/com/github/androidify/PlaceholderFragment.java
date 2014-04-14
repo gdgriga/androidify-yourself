@@ -9,10 +9,16 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 public class PlaceholderFragment extends Fragment {
+
+    private final String mySound = "my_recorded_sound";
+    private AndroidSoundRecorder soundRecorder;
+    private AndroidSoundPlayer soundPlayer;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -27,6 +33,55 @@ public class PlaceholderFragment extends Fragment {
         viewPagerBody.setAdapter(new AndroidifyViewPagerAdapter(fm, AndroidDrawables.getBodies()));
         viewPagerLegs.setAdapter(new AndroidifyViewPagerAdapter(fm, AndroidDrawables.getLegs()));
 
+        initShareButton(rootView, viewPagerHead, viewPagerBody, viewPagerLegs);
+        initPlayButton(rootView);
+        initRecordButton(rootView);
+
+        return rootView;
+    }
+
+    private void initPlayButton(View rootView) {
+        soundPlayer = new AndroidSoundPlayer(mySound);
+
+        View playButton = rootView.findViewById(R.id.button_play_sound);
+        playButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (soundPlayer.isPlaying()) {
+                    soundPlayer.stopPlaying();
+                } else {
+                    soundPlayer.startPlaying();
+                }
+            }
+        });
+    }
+
+    private void initRecordButton(View rootView) {
+        soundRecorder = new AndroidSoundRecorder(mySound);
+
+        View recordButton = rootView.findViewById(R.id.button_record_sound);
+        recordButton.setOnTouchListener(new View.OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                ImageButton recordButton = (ImageButton) view;
+
+                if (MotionEvent.ACTION_UP == motionEvent.getAction()) {
+                    if (soundRecorder.isRecording()) {
+                        soundRecorder.stopRecording();
+                        recordButton.setImageDrawable(getResources().getDrawable(R.drawable.record_off));
+                    } else {
+                        soundRecorder.startRecording();
+                        recordButton.setImageDrawable(getResources().getDrawable(R.drawable.record_on));
+                    }
+                }
+
+                return false;
+            }
+        });
+    }
+
+    private void initShareButton(View rootView, final ViewPager viewPagerHead, final ViewPager viewPagerBody, final ViewPager viewPagerLegs) {
         View shareButton = rootView.findViewById(R.id.button_share);
         shareButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -39,13 +94,16 @@ public class PlaceholderFragment extends Fragment {
 
                 String imagePath = MediaStore.Images.Media.insertImage(getActivity().getContentResolver(), bitmap, "Android Avatar", null);
                 Uri imageURI = Uri.parse(imagePath);
-
                 startShareActivity(imageURI);
             }
         });
+    }
 
-
-        return rootView;
+    @Override
+    public void onPause() {
+        super.onPause();
+        soundRecorder.stopRecording();
+        soundPlayer.stopPlaying();
     }
 
     private void startShareActivity(Uri imageURI) {
