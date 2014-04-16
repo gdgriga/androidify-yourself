@@ -17,7 +17,9 @@ public class AndroidifyViewPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return new AndroidifyViewPagerItemFragment(imgIds.get(position));
+        AndroidifyViewPagerItemFragment fragment = new AndroidifyViewPagerItemFragment();
+        fragment.setImgId(imgIds.get(position));
+        return fragment;
     }
 
     @Override
