@@ -129,6 +129,7 @@ public Fragment getItem(int position) {
     return new AndroidifyViewPagerItemFragment(imgIds.get(position));
 }
 ```
+* Extend MainActivity from android.support.v4.app.FragmentActivity
 * Set Adapter to ViewPagers in MainActivity
 ```
 @Override
@@ -140,7 +141,7 @@ protected void onCreate(Bundle savedInstanceState) {
     ViewPager bodyViewPager = (ViewPager) findViewById(R.id.viewPagerBody);
     ViewPager legsViewPager = (ViewPager) findViewById(R.id.viewPagerLegs);
 
-    FragmentManager fm = getActivity().getSupportFragmentManager();
+    FragmentManager fm = getSupportFragmentManager();
     headViewPager.setAdapter(new AndroidifyViewPagerAdapter(fm, AndroidDrawables.getHeads()));
     bodyViewPager.setAdapter(new AndroidifyViewPagerAdapter(fm, AndroidDrawables.getBodies()));
     legsViewPager.setAdapter(new AndroidifyViewPagerAdapter(fm, AndroidDrawables.getLegs()));
@@ -150,70 +151,70 @@ protected void onCreate(Bundle savedInstanceState) {
 ```
 public class AndroidDrawables {
 
-    private static final List<Integer> bodies = new ArrayList<Integer>() {{
-        add(R.drawable.body1);
-        add(R.drawable.body2);
-        add(R.drawable.body3);
-        add(R.drawable.body4);
-        add(R.drawable.body5);
-        add(R.drawable.body6);
-        add(R.drawable.body7);
-        add(R.drawable.body8);
-        add(R.drawable.body9);
-        add(R.drawable.body10);
-        add(R.drawable.body11);
-        add(R.drawable.body12);
-        add(R.drawable.body13);
-        add(R.drawable.body14);
-        add(R.drawable.body15);
-        add(R.drawable.body16);
-        add(R.drawable.body17);
-        add(R.drawable.body18);
-        add(R.drawable.body19);
-    }};
+    private static final List<Integer> bodies = new ArrayList<Integer>(Arrays.asList(
+        R.drawable.body1,
+        R.drawable.body2,
+        R.drawable.body3,
+        R.drawable.body4,
+        R.drawable.body5,
+        R.drawable.body6,
+        R.drawable.body7,
+        R.drawable.body8,
+        R.drawable.body9,
+        R.drawable.body10,
+        R.drawable.body11,
+        R.drawable.body12,
+        R.drawable.body13,
+        R.drawable.body14,
+        R.drawable.body15,
+        R.drawable.body16,
+        R.drawable.body17,
+        R.drawable.body18,
+        R.drawable.body19
+    ));
 
-    private static final List<Integer> heads = new ArrayList<Integer>() {{
-        add(R.drawable.head1);
-        add(R.drawable.head2);
-        add(R.drawable.head3);
-        add(R.drawable.head4);
-        add(R.drawable.head5);
-        add(R.drawable.head6);
-        add(R.drawable.head7);
-        add(R.drawable.head8);
-        add(R.drawable.head9);
-        add(R.drawable.head10);
-        add(R.drawable.head11);
-        add(R.drawable.head12);
-        add(R.drawable.head13);
-        add(R.drawable.head14);
-        add(R.drawable.head15);
-        add(R.drawable.head16);
-        add(R.drawable.head17);
-        add(R.drawable.head18);
-        add(R.drawable.head19);
-    }};
+    private static final List<Integer> heads = new ArrayList<Integer>(Arrays.asList(
+        R.drawable.head1,
+        R.drawable.head2,
+        R.drawable.head3,
+        R.drawable.head4,
+        R.drawable.head5,
+        R.drawable.head6,
+        R.drawable.head7,
+        R.drawable.head8,
+        R.drawable.head9,
+        R.drawable.head10,
+        R.drawable.head11,
+        R.drawable.head12,
+        R.drawable.head13,
+        R.drawable.head14,
+        R.drawable.head15,
+        R.drawable.head16,
+        R.drawable.head17,
+        R.drawable.head18,
+        R.drawable.head19
+    ));
 
-    private static final List<Integer> legs = new ArrayList<Integer>() {{
-        add(R.drawable.legs1);
-        add(R.drawable.legs2);
-        add(R.drawable.legs3);
-        add(R.drawable.legs4);
-        add(R.drawable.legs5);
-        add(R.drawable.legs6);
-        add(R.drawable.legs7);
-        add(R.drawable.legs8);
-        add(R.drawable.legs10);
-        add(R.drawable.legs11);
-        add(R.drawable.legs12);
-        add(R.drawable.legs13);
-        add(R.drawable.legs14);
-        add(R.drawable.legs15);
-        add(R.drawable.legs16);
-        add(R.drawable.legs17);
-        add(R.drawable.legs18);
-        add(R.drawable.legs19);
-    }};
+    private static final List<Integer> legs = new ArrayList<Integer>(Arrays.asList(
+        R.drawable.legs1,
+        R.drawable.legs2,
+        R.drawable.legs3,
+        R.drawable.legs4,
+        R.drawable.legs5,
+        R.drawable.legs6,
+        R.drawable.legs7,
+        R.drawable.legs8,
+        R.drawable.legs10,
+        R.drawable.legs11,
+        R.drawable.legs12,
+        R.drawable.legs13,
+        R.drawable.legs14,
+        R.drawable.legs15,
+        R.drawable.legs16,
+        R.drawable.legs17,
+        R.drawable.legs18,
+        R.drawable.legs19
+    ));
 
     public static List<Integer> getBodies() {
         return bodies;
@@ -228,4 +229,44 @@ public class AndroidDrawables {
     }
 }
 ```
-## Extended Functionalityasic
+### Bug fixes
+* Try to flip your device ;) Lets try to fix AndroidifyViewPagerItemFragment:
+```
+public class AndroidifyViewPagerItemFragment extends Fragment {
+
+    public static final String IMG_ID = "IMG_ID";
+
+    private int imgId;
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            imgId = savedInstanceState.getInt(IMG_ID);
+        }
+
+        View rootView = inflater.inflate(R.layout.androidify_part, container, false);
+        ImageView imageView = (ImageView) rootView.findViewById(R.id.android_part);
+        imageView.setImageResource(imgId);
+        return rootView;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putInt(IMG_ID, imgId);
+    }
+
+    public void setImgId(int imgId) {
+        this.imgId = imgId;
+    }
+}
+```
+* And fix getItem() in AndroidifyViewPagerAdapter
+```
+@Override
+public Fragment getItem(int position) {
+    AndroidifyViewPagerItemFragment fragment = new AndroidifyViewPagerItemFragment();
+    fragment.setImgId(imgIds.get(position));
+    return fragment;
+}
+```
+## Extended Functionality
