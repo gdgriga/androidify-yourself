@@ -1,6 +1,7 @@
 Androidify Yourself app for GDG Riga event
 
 ## Basic Functionality
+* Change Application name to Androidify Yourself!
 * Rename helloworld.xml layout to main.xml
 * Split screen into parts
 ``` xml
@@ -326,4 +327,231 @@ public Fragment getItem(int position) {
                 android:scaleType="centerInside" />
     </LinearLayout>
 </LinearLayout>
+```
+* Lets implement Androidify Share intent in MainActivity
+``` java
+@Override
+protected void onCreate(Bundle savedInstanceState) {
+    ...
+    initShareButton(headViewPager, bodyViewPager, legsViewPager);
+}
+
+private void initShareButton(final ViewPager viewPagerHead, final ViewPager viewPagerBody, final ViewPager viewPagerLegs) {
+    View shareButton = findViewById(R.id.button_share);
+    shareButton.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            ...
+        }
+    });
+}
+```
+* Create BitmapUtils for creating an image Bitmap
+``` java
+public class BitmapUtils {
+
+    public static Bitmap getBitmap(Resources resources, int drawableResourceId) {
+        return BitmapFactory.decodeResource(resources,
+                drawableResourceId);
+    }
+
+    public static Bitmap combineDrawables(Resources resources, int head, int body, int legs) {
+        Bitmap headBitmap = getBitmap(resources, head);
+        Bitmap bodyBitmap = getBitmap(resources, body);
+        Bitmap legsBitmap = getBitmap(resources, legs);
+
+        int height = headBitmap.getHeight() + bodyBitmap.getHeight() + legsBitmap.getHeight();
+        int width = Math.max(headBitmap.getWidth(), Math.max(bodyBitmap.getWidth(), legsBitmap.getWidth()));
+
+        Bitmap result = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas comboImage = new Canvas(result);
+        comboImage.drawBitmap(headBitmap, 0f, 0f, null);
+        comboImage.drawBitmap(bodyBitmap, 0f, headBitmap.getHeight(), null);
+        comboImage.drawBitmap(legsBitmap, 0f, headBitmap.getHeight() + bodyBitmap.getHeight(), null);
+
+        return result;
+    }
+}
+```
+* Add share intent invocation onClick
+``` java
+private void initShareButton(final ViewPager viewPagerHead, final ViewPager viewPagerBody, final ViewPager viewPagerLegs) {
+    View shareButton = findViewById(R.id.button_share);
+    shareButton.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            Integer head = AndroidDrawables.getHeads().get(viewPagerHead.getCurrentItem());
+            Integer body = AndroidDrawables.getBodies().get(viewPagerBody.getCurrentItem());
+            Integer legs = AndroidDrawables.getLegs().get(viewPagerLegs.getCurrentItem());
+
+            Bitmap bitmap = BitmapUtils.combineDrawables(getResources(), head, body, legs);
+
+            String imagePath = MediaStore.Images.Media.insertImage(getContentResolver(), bitmap, "Android Avatar", null);
+            Uri imageURI = Uri.parse(imagePath);
+            startShareActivity(imageURI);
+        }
+    });
+}
+
+private void startShareActivity(Uri imageURI) {
+    Intent shareIntent = new Intent(Intent.ACTION_SEND);
+
+    shareIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    shareIntent.putExtra(Intent.EXTRA_STREAM, imageURI);
+    shareIntent.setType("image/png");
+
+    startActivity(shareIntent);
+}
+```
+* Oops we have an exception. Lets fix it
+``` xml
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+```
+* Next stop - sound recording. Create AndroidSoundRecorder
+``` java
+public class AndroidSoundRecorder {
+
+    private MediaRecorder mediaRecorder;
+    private String mFileName;
+
+    public AndroidSoundRecorder(String mFileName) {
+        this.mFileName = Environment.getExternalStorageDirectory().
+                getAbsolutePath() + "/" + mFileName;
+    }
+
+    public void startRecording() {
+        if (mediaRecorder != null) stopRecording();
+
+        mediaRecorder = new MediaRecorder();
+        mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+        mediaRecorder.setOutputFile(mFileName);
+        mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+        mediaRecorder.setAudioSamplingRate(44100);
+        mediaRecorder.setAudioEncodingBitRate(16);
+
+        try {
+            mediaRecorder.prepare();
+        } catch (IOException e) {
+            Log.e(AndroidSoundRecorder.class.getSimpleName(), "prepare() failed");
+        }
+
+        mediaRecorder.start();
+
+    }
+
+    public void stopRecording() {
+        if (mediaRecorder == null) return;
+
+        mediaRecorder.stop();
+        mediaRecorder.release();
+        mediaRecorder = null;
+    }
+
+    public boolean isRecording() {
+        return mediaRecorder != null;
+    }
+
+}
+```
+* Initiate RecordButton in MainActivity
+``` java
+...
+private final String mySound = "my_recorded_sound";
+private AndroidSoundRecorder soundRecorder;
+...
+
+@Override
+protected void onCreate(Bundle savedInstanceState) {
+    ...
+    initRecordButton();
+}
+
+private void initRecordButton() {
+    soundRecorder = new AndroidSoundRecorder(mySound);
+
+    View recordButton = findViewById(R.id.button_record_sound);
+    recordButton.setOnTouchListener(new View.OnTouchListener() {
+
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            ImageButton recordButton = (ImageButton) view;
+
+            if (MotionEvent.ACTION_UP == motionEvent.getAction()) {
+                if (soundRecorder.isRecording()) {
+                    soundRecorder.stopRecording();
+                    recordButton.setImageDrawable(getResources().getDrawable(R.drawable.record_off));
+                } else {
+                    soundRecorder.startRecording();
+                    recordButton.setImageDrawable(getResources().getDrawable(R.drawable.record_on));
+                }
+            }
+
+            return false;
+        }
+    });
+}
+```
+* Create AndroidSoundPlayer
+```
+public class AndroidSoundPlayer {
+
+    private final String fileName;
+    private MediaPlayer mediaPlayer;
+
+    public AndroidSoundPlayer(String fileName) {
+        this.fileName = Environment.getExternalStorageDirectory().
+                getAbsolutePath() + "/" + fileName;
+    }
+
+    public void startPlaying() {
+        if (mediaPlayer != null) stopPlaying();
+
+        mediaPlayer = new MediaPlayer();
+        try {
+            mediaPlayer.setDataSource(fileName);
+            mediaPlayer.prepare();
+            mediaPlayer.start();
+        } catch (IOException e) {
+            Log.e("SoundPlayer", "prepare() failed");
+        }
+    }
+
+    public void stopPlaying() {
+        if (mediaPlayer == null) return;
+        mediaPlayer.release();
+        mediaPlayer = null;
+    }
+
+    public boolean isPlaying() {
+        return mediaPlayer != null && mediaPlayer.isPlaying();
+    }
+}
+```
+* Initiate PlayButton in MainActivity
+``` java
+private AndroidSoundPlayer soundPlayer;
+...
+
+@Override
+protected void onCreate(Bundle savedInstanceState) {
+    ...
+    initPlayButton();
+}
+
+private void initPlayButton() {
+    soundPlayer = new AndroidSoundPlayer(mySound);
+
+    View playButton = findViewById(R.id.button_play_sound);
+    playButton.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if (soundPlayer.isPlaying()) {
+                soundPlayer.stopPlaying();
+            } else {
+                soundPlayer.startPlaying();
+            }
+        }
+    });
+}
 ```
