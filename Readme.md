@@ -3,7 +3,7 @@ Androidify Yourself app for GDG Riga event
 ## Basic Functionality
 * Rename helloworld.xml layout to main.xml
 * Split screen into parts
-```
+``` xml
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -21,7 +21,7 @@ Androidify Yourself app for GDG Riga event
 </LinearLayout>
 ```
 *  Add Layout with Android parts selectors
-```
+``` xml
 <LinearLayout
     android:layout_weight="90"
     android:layout_width="match_parent"
@@ -50,7 +50,7 @@ Androidify Yourself app for GDG Riga event
 </LinearLayout>
 ```
 * Bind Views in MainActivity
-```
+``` java
 @Override
 protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -63,7 +63,7 @@ protected void onCreate(Bundle savedInstanceState) {
 }
 ```
 * Create AndroidifyViewPagerAdapter
-```
+``` java
 public class AndroidifyViewPagerAdapter extends FragmentPagerAdapter {
 
     private List<Integer> imgIds;
@@ -85,7 +85,7 @@ public class AndroidifyViewPagerAdapter extends FragmentPagerAdapter {
 }
 ```
 * Create AndroidifyViewPagerItemFragment
-```
+``` java
 public class AndroidifyViewPagerItemFragment extends Fragment {
 
     private int imgId;
@@ -101,7 +101,7 @@ public class AndroidifyViewPagerItemFragment extends Fragment {
 }
 ```
 * Create androidify_part.xml layout
-```
+``` xml
  <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
      android:layout_width="match_parent"
      android:layout_height="match_parent">
@@ -113,7 +113,7 @@ public class AndroidifyViewPagerItemFragment extends Fragment {
  </LinearLayout>
 ```
 * Add View inflating in AndroidifyViewPagerItemFragment onCreateView()
-```
+``` java
 @Override
 public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     View rootView = inflater.inflate(R.layout.androidify_part, container, false);
@@ -123,7 +123,7 @@ public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle sa
 }
 ```
 * Add Fragment creating in AndroidifyViewPagerAdapter getItem(int position)
-```
+``` java
 @Override
 public Fragment getItem(int position) {
     return new AndroidifyViewPagerItemFragment(imgIds.get(position));
@@ -131,7 +131,7 @@ public Fragment getItem(int position) {
 ```
 * Extend MainActivity from android.support.v4.app.FragmentActivity
 * Set Adapter to ViewPagers in MainActivity
-```
+``` java
 @Override
 protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -148,7 +148,7 @@ protected void onCreate(Bundle savedInstanceState) {
 }
 ```
 * Create and register all Drawables
-```
+``` java
 public class AndroidDrawables {
 
     private static final List<Integer> bodies = new ArrayList<Integer>(Arrays.asList(
@@ -231,7 +231,7 @@ public class AndroidDrawables {
 ```
 ### Bug fixes
 * Try to flip your device ;) Lets try to fix AndroidifyViewPagerItemFragment:
-```
+``` java
 public class AndroidifyViewPagerItemFragment extends Fragment {
 
     public static final String IMG_ID = "IMG_ID";
@@ -261,7 +261,7 @@ public class AndroidifyViewPagerItemFragment extends Fragment {
 }
 ```
 * And fix getItem() in AndroidifyViewPagerAdapter
-```
+``` java
 @Override
 public Fragment getItem(int position) {
     AndroidifyViewPagerItemFragment fragment = new AndroidifyViewPagerItemFragment();
@@ -270,3 +270,60 @@ public Fragment getItem(int position) {
 }
 ```
 ## Extended Functionality
+* Lets add a control panel in main.xml layout
+``` xml
+<LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:weightSum="3"
+        android:layout_weight="20">
+
+    <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:layout_height="wrap_content">
+
+        <ImageButton
+                android:id="@+id/button_share"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/android_icon"
+                android:background="@null"
+                android:adjustViewBounds="true"
+                android:scaleType="centerInside" />
+    </LinearLayout>
+
+    <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:layout_height="wrap_content">
+
+        <ImageButton
+                android:id="@+id/button_record_sound"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/record_off"
+                android:background="@null"
+                android:adjustViewBounds="true"
+                android:scaleType="centerInside" />
+    </LinearLayout>
+
+    <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:layout_height="wrap_content">
+
+        <ImageButton
+                android:id="@+id/button_play_sound"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/play"
+                android:background="@null"
+                android:adjustViewBounds="true"
+                android:scaleType="centerInside" />
+    </LinearLayout>
+</LinearLayout>
+```
