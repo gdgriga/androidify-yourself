@@ -555,3 +555,7 @@ private void initPlayButton() {
     });
 }
 ```
+* Add permission to AndroidManifest.xml
+``` xml
+<uses-permission android:name="android.permission.RECORD_AUDIO"/>
+```
