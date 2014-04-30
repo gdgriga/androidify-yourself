@@ -1,4 +1,5 @@
-Androidify Yourself app for GDG Riga event
+## Androidify Yourself app for GDG Riga event
+![screenshot](androidify-yourself-screenshot.png)
 
 ## Basic Functionality
 * Change Application name to Androidify Yourself!
