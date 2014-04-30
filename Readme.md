@@ -1,3 +1,5 @@
+![screenshot][https://lh3.googleusercontent.com/-BFRRW598q9g/U2CrW4ufpeI/AAAAAAAAAG4/oIArtHXvtrA/w204-h348-no/androidify-yourself-screenshot.png]
+
 Androidify Yourself app for GDG Riga event
 
 ## Basic Functionality
