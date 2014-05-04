@@ -5,7 +5,8 @@
 https://speakerdeck.com/larchaon/androidify-yourself
 
 ## Basic Functionality
-* Change Application name to Androidify Yourself!
+* Download and start sample application from ["empty" git branch](https://github.com/gdgriga/androidify-yourself/tree/empty)
+* Change Application name to "Androidify Yourself!"
 * Rename helloworld.xml layout to main.xml
 * Split screen into parts
 ``` xml
