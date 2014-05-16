@@ -1,8 +1,11 @@
-## Androidify Yourself app for GDG Riga event
+## Androidify Yourself app for GDG event
 ![screenshot](https://raw.githubusercontent.com/gdgriga/androidify-yourself/master/src/main/res/drawable/androidify-yourself-screenshot.png)
 
-### Slides
+#### Slides
 https://speakerdeck.com/larchaon/androidify-yourself
+
+#### GDG Riga event link
+[G+ event link](https://plus.google.com/events/c3umaelcg97c7kp9ug2a9ealocs)
 
 ## Basic Functionality
 * Download and start sample application from ["empty" git branch](https://github.com/gdgriga/androidify-yourself/tree/empty)
